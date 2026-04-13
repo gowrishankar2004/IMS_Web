@@ -487,7 +487,7 @@ export default function Home() {
               excellence and innovation.
             </p>
             <a
-              href="/contact"
+              href="/admissions"
               className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-emerald-600 px-8 py-3.5 text-sm font-bold text-white shadow-[0_0_30px_rgba(34,197,94,0.18)] transition-all duration-300 hover:scale-105 hover:bg-emerald-500 hover:shadow-[0_0_50px_rgba(34,197,94,0.25)]"
             >
               Apply Now
