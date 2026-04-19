@@ -53,6 +53,8 @@ export default function ParticleBackground() {
     let particles: Particle[] = [];
     let animationFrameId: number;
     let offscreen: HTMLCanvasElement | null = null;
+    let lastFrameTime = 0;
+    const frameDuration = 1000 / 30; // Cap at 30fps to save CPU
 
     // Pre-render the static dot grid once to an offscreen canvas
     const buildDotGrid = (w: number, h: number) => {
@@ -86,12 +88,15 @@ export default function ParticleBackground() {
       );
     };
 
-    const animate = () => {
+    const animate = (now: number) => {
+      animationFrameId = requestAnimationFrame(animate);
+
       // Pause rendering when tab is not visible
-      if (document.hidden) {
-        animationFrameId = requestAnimationFrame(animate);
-        return;
-      }
+      if (document.hidden) return;
+
+      // Throttle to ~30fps
+      if (now - lastFrameTime < frameDuration) return;
+      lastFrameTime = now;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -121,12 +126,10 @@ export default function ParticleBackground() {
         }
         particles[i].draw(ctx);
       }
-
-      animationFrameId = requestAnimationFrame(animate);
     };
 
     init();
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", resize);
@@ -138,7 +141,7 @@ export default function ParticleBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: 0, willChange: "transform" }}
+      style={{ zIndex: 0 }}
     />
   );
 }

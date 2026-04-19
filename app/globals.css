@@ -207,7 +207,6 @@ html {
 }
 .blob-complex {
   animation: float-complex 15s ease-in-out infinite;
-  will-change: transform;
 }
 .blob-d2 {
   animation-delay: -5s;
@@ -237,7 +236,6 @@ html {
 .animate-bg-pan {
   background-size: 200% 200%;
   animation: bg-pan 10s ease infinite;
-  will-change: background-position;
 }
 
 @keyframes shimmer {
@@ -251,7 +249,6 @@ html {
 .shimmer {
   background-size: 200% auto;
   animation: shimmer 4s linear infinite;
-  will-change: background-position;
 }
 
 /* ── Mobile Touch / Tap Improvements ── */
@@ -284,7 +281,6 @@ html {
 }
 .marquee {
   animation: marquee-scroll 25s linear infinite;
-  will-change: transform;
 }
 
 @media (max-width: 640px) {
@@ -300,7 +296,6 @@ html {
 }
 .spin-slow {
   animation: spin-slow 25s linear infinite;
-  will-change: transform;
 }
 
 /* ── Respect user motion preferences ── */

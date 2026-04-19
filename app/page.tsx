@@ -1,36 +1,7 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-
-function useScrollReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const selectors = [
-      ".reveal-up",
-      ".reveal-down",
-      ".reveal-left",
-      ".reveal-right",
-      ".reveal-scale",
-    ];
-    const targets = el.querySelectorAll(selectors.join(", "));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("visible");
-            observer.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12 },
-    );
-    targets.forEach((t) => observer.observe(t));
-    return () => observer.disconnect();
-  }, []);
-  return ref;
-}
+import Image from "next/image";
+import Link from "next/link";
+import ScrollRevealWrapper from "./components/ScrollRevealWrapper";
+import instituteImg from "../public/institute.jpg";
 
 const stats = [
   {
@@ -119,8 +90,7 @@ const features = [
     accent: "emerald",
     num: "04",
     icon: (
-      <a href="/academics" aria-label="Go to academics page">
-        <svg
+      <svg
         className="h-6 w-6"
         fill="none"
         viewBox="0 0 24 24"
@@ -133,17 +103,13 @@ const features = [
           d="M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493a59.903 59.903 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0112 13.489"
         />
       </svg>
-      </a>
-      
     ),
   },
 ];
 
 export default function Home() {
-  const scrollRef = useScrollReveal();
-
   return (
-    <div ref={scrollRef} className="bg-transparent">
+    <ScrollRevealWrapper className="bg-transparent">
       {/* Hero Section */}
       <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-transparent">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -183,7 +149,7 @@ export default function Home() {
               className="anim-up mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start"
               style={{ animationDelay: "0.6s" }}
             >
-              <a
+              <Link
                 href="/academics"
                 className="group relative inline-flex w-full items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 px-8 py-4 text-sm font-bold text-white shadow-premium transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-premium-hover active:scale-95 sm:w-auto"
               >
@@ -191,13 +157,13 @@ export default function Home() {
                   <div className="relative h-full w-8 bg-white/20" />
                 </div>
                 <span>Explore Academics</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/contact"
                 className="inline-flex w-full items-center justify-center rounded-2xl border-2 border-emerald-200 bg-white/70 px-8 py-4 text-sm font-bold text-slate-700 backdrop-blur-md transition-all hover:-translate-y-1 hover:border-emerald-500 hover:bg-white hover:text-emerald-700 hover:shadow-premium sm:w-auto"
               >
                 Contact Us
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -209,11 +175,14 @@ export default function Home() {
             <div className="absolute inset-0 scale-105 rounded-3xl bg-linear-to-tr from-emerald-500 via-emerald-300 to-emerald-100 opacity-30 blur-3xl" />
             <div className="glass-panel relative overflow-hidden rounded-3xl shadow-premium border border-white/60">
               <div className="relative h-72 sm:h-80 lg:h-96 w-full overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/institute.jpg"
+                <Image
+                  src={instituteImg}
                   alt="Invent Institute of Mathematics & Science building"
-                  className="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 512px"
+                  priority
+                  placeholder="blur"
+                  className="object-cover object-center transition-transform duration-700 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-slate-900/70 via-slate-900/10 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
@@ -233,22 +202,23 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-2 divide-x divide-slate-200/50 bg-white/70 backdrop-blur-md sm:grid-cols-4">
                 {stats.map((s) => (
-                  <a key={s.label} href={s.href} aria-label={`Go to ${s.label}`}>
-                    <div
-                    className="group flex flex-col items-center py-4 transition-all duration-300 hover:bg-emerald-50/70"
+                  <Link
+                    key={s.label}
+                    href={s.href}
+                    aria-label={`Go to ${s.label}`}
                   >
-                    <span className="text-xl transition-transform duration-300 group-hover:scale-125">
-                      {s.icon}
-                    </span>
-                    <span className="mt-1 text-base font-black text-slate-900">
-                      {s.num}
-                    </span>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500 text-center leading-tight px-1">
-                      {s.label}
-                    </span>
-                  </div>
-                  </a>
-                  
+                    <div className="group flex flex-col items-center py-4 transition-all duration-300 hover:bg-emerald-50/70">
+                      <span className="text-xl transition-transform duration-300 group-hover:scale-125">
+                        {s.icon}
+                      </span>
+                      <span className="mt-1 text-base font-black text-slate-900">
+                        {s.num}
+                      </span>
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500 text-center leading-tight px-1">
+                        {s.label}
+                      </span>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -436,7 +406,7 @@ export default function Home() {
                 <p className="text-sm leading-relaxed text-emerald-100">
                   {features[3].desc}
                 </p>
-                <a
+                <Link
                   href="/academics"
                   className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white hover:text-emerald-700"
                   style={{ boxShadow: "0 0 0 0 rgba(255,255,255,0)" }}
@@ -455,7 +425,7 @@ export default function Home() {
                       d="M17 8l4 4m0 0l-4 4m4-4H3"
                     />
                   </svg>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -497,7 +467,7 @@ export default function Home() {
               passionate learners and start your journey towards academic
               excellence and innovation.
             </p>
-            <a
+            <Link
               href="/admissions"
               className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-emerald-600 px-8 py-3.5 text-sm font-bold text-white shadow-[0_0_30px_rgba(34,197,94,0.18)] transition-all duration-300 hover:scale-105 hover:bg-emerald-500 hover:shadow-[0_0_50px_rgba(34,197,94,0.25)]"
             >
@@ -515,12 +485,12 @@ export default function Home() {
                   d="M17 8l4 4m0 0l-4 4m4-4H3"
                 />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Footer is rendered globally via layout.tsx */}
-    </div>
+    </ScrollRevealWrapper>
   );
 }
