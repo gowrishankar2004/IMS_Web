@@ -13,10 +13,10 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar — copyright + powered by */}
-      <div className="border-t border-emerald-200/70">
+      <div>
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-1 px-4 py-2.5 sm:flex-row sm:justify-between sm:px-6">
           <p className="text-center text-[9px] font-bold uppercase tracking-wide text-emerald-900/70 sm:tracking-widest">
-            Copyright &copy; {new Date().getFullYear()} Invent Institute of
+            Copyright &copy;{new Date().getFullYear()} &ensp;Invent Institute of
             Mathematics &amp; Science — All Rights Reserved.
           </p>
           <p className="text-[9px] font-bold uppercase tracking-wide text-emerald-900/70 sm:tracking-widest">
