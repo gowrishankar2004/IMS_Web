@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LazyParticleBackground from "./components/LazyParticleBackground";
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Navbar />
         <div className="relative z-10 flex flex-col grow">{children}</div>
         <Footer />
+        <SpeedInsights />
       </body>
     </html>
   );
