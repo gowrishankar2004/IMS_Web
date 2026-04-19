@@ -362,24 +362,22 @@ export default function AdmissionsPage() {
 
             <div>
               <RequiredLabel>Gender</RequiredLabel>
-              <select
-                value={gender}
-                onChange={(event) =>
-                  setGender(
-                    event.target.value as (typeof genderOptions)[number] | "",
-                  )
-                }
-                className="w-full rounded-xl border border-emerald-200 bg-emerald-50/40 px-5 py-4 text-sm text-slate-800 outline-none transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/20"
-              >
-                <option value="" disabled>
-                  Select an option
-                </option>
+              <div className="grid gap-3 sm:grid-cols-3">
                 {genderOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
+                  <label
+                    key={option}
+                    className="flex cursor-pointer items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3 text-sm text-slate-700"
+                  >
+                    <input
+                      type="radio"
+                      name="gender"
+                      checked={gender === option}
+                      onChange={() => setGender(option)}
+                    />
+                    <span>{option}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
 
             <div>
