@@ -72,25 +72,23 @@ export default function AdmissionsPage() {
 
   const [studentName, setStudentName] = useState("");
   const [dob, setDob] = useState("");
-  const [gender, setGender] = useState<(typeof genderOptions)[number]>("Male");
-  const [board, setBoard] = useState<(typeof boardOptions)[number]>(
-    "Tamilnadu StateBoard",
-  );
+  const [gender, setGender] = useState<(typeof genderOptions)[number] | "">("")
+  const [board, setBoard] = useState<(typeof boardOptions)[number] | "">("")
   const [boardOther, setBoardOther] = useState("");
   const [category, setCategory] =
-    useState<(typeof categoryOptions)[number]>("Class 7–10");
+    useState<(typeof categoryOptions)[number] | "">("")
   const [groupSelection, setGroupSelection] = useState<
-    (typeof groupOptions)[number]
-  >(groupOptions[0]);
+    (typeof groupOptions)[number] | ""
+  >("");
   const [class7To10Selected, setClass7To10Selected] = useState<string[]>([]);
   const [group1Selected, setGroup1Selected] = useState<string[]>([]);
   const [group2Selected, setGroup2Selected] = useState<string[]>([]);
   const [group3Selected, setGroup3Selected] = useState<string[]>([]);
   const [ugSelected, setUgSelected] = useState<string[]>([]);
   const [weekendBatch, setWeekendBatch] =
-    useState<(typeof weekendOptions)[number]>("Yes");
+    useState<(typeof weekendOptions)[number] | "">("")
   const [introducer, setIntroducer] =
-    useState<(typeof introducerOptions)[number]>("Website");
+    useState<(typeof introducerOptions)[number] | "">("")
   const [introducerOther, setIntroducerOther] = useState("");
 
   useEffect(() => {
@@ -134,18 +132,18 @@ export default function AdmissionsPage() {
   const resetForm = (options?: { clearMessage?: boolean }) => {
     setStudentName("");
     setDob("");
-    setGender("Male");
-    setBoard("Tamilnadu StateBoard");
+    setGender("");
+    setBoard("");
     setBoardOther("");
-    setCategory("Class 7–10");
-    setGroupSelection(groupOptions[0]);
+    setCategory("");
+    setGroupSelection("");
     setClass7To10Selected([]);
     setGroup1Selected([]);
     setGroup2Selected([]);
     setGroup3Selected([]);
     setUgSelected([]);
-    setWeekendBatch("Yes");
-    setIntroducer("Website");
+    setWeekendBatch("");
+    setIntroducer("");
     setIntroducerOther("");
     if (options?.clearMessage ?? true) {
       setStatusMessage(null);
@@ -167,6 +165,46 @@ export default function AdmissionsPage() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!gender) {
+      setStatusMessage({
+        kind: "error",
+        message: "Please select a gender.",
+      });
+      return;
+    }
+
+    if (!board) {
+      setStatusMessage({
+        kind: "error",
+        message: "Please select a board of education.",
+      });
+      return;
+    }
+
+    if (!category) {
+      setStatusMessage({
+        kind: "error",
+        message: "Please select a course category.",
+      });
+      return;
+    }
+
+    if (!weekendBatch) {
+      setStatusMessage({
+        kind: "error",
+        message: "Please select whether you are looking for a weekend batch.",
+      });
+      return;
+    }
+
+    if (!introducer) {
+      setStatusMessage({
+        kind: "error",
+        message: "Please select your introducer.",
+      });
+      return;
+    }
+
     if (category === "Class 7–10" && class7To10Selected.length === 0) {
       setStatusMessage({
         kind: "error",
@@ -176,6 +214,14 @@ export default function AdmissionsPage() {
     }
 
     if (category === "Class 11–12") {
+      if (!groupSelection) {
+        setStatusMessage({
+          kind: "error",
+          message: "Please select a group.",
+        });
+        return;
+      }
+
       const activeGroupSelections =
         groupSelection === groupOptions[0]
           ? group1Selected
@@ -316,21 +362,22 @@ export default function AdmissionsPage() {
 
             <div>
               <RequiredLabel>Gender</RequiredLabel>
-              <select
-                value={gender}
-                onChange={(event) =>
-                  setGender(
-                    event.target.value as (typeof genderOptions)[number],
-                  )
-                }
-                className="w-full rounded-xl border border-emerald-200 bg-emerald-50/40 px-5 py-4 text-sm text-slate-800 outline-none transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/20"
-              >
+              <div className="grid gap-3 sm:grid-cols-3">
                 {genderOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
+                  <label
+                    key={option}
+                    className="flex cursor-pointer items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3 text-sm text-slate-700"
+                  >
+                    <input
+                      type="radio"
+                      name="gender"
+                      checked={gender === option}
+                      onChange={() => setGender(option)}
+                    />
+                    <span>{option}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
 
             <div>
@@ -339,7 +386,7 @@ export default function AdmissionsPage() {
                 value={board}
                 onChange={(event) => {
                   const nextBoard = event.target
-                    .value as (typeof boardOptions)[number];
+                    .value as (typeof boardOptions)[number] | "";
                   setBoard(nextBoard);
                   if (nextBoard !== "Other") {
                     setBoardOther("");
@@ -347,6 +394,9 @@ export default function AdmissionsPage() {
                 }}
                 className="w-full rounded-xl border border-emerald-200 bg-emerald-50/40 px-5 py-4 text-sm text-slate-800 outline-none transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/20"
               >
+                <option value="" disabled>
+                  Select an option
+                </option>
                 {boardOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -369,12 +419,17 @@ export default function AdmissionsPage() {
                 value={category}
                 onChange={(event) => {
                   const nextCategory = event.target
-                    .value as (typeof categoryOptions)[number];
+                    .value as (typeof categoryOptions)[number] | "";
                   setCategory(nextCategory);
-                  resetBranchState(nextCategory);
+                  if (nextCategory) {
+                    resetBranchState(nextCategory as (typeof categoryOptions)[number]);
+                  }
                 }}
                 className="w-full rounded-xl border border-emerald-200 bg-emerald-50/40 px-5 py-4 text-sm text-slate-800 outline-none transition-all focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/20"
               >
+                <option value="" disabled>
+                  Select an option
+                </option>
                 {categoryOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
